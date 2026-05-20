@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Family Member Profile Card</title>
+  <!-- Tailwind CSS CDN for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Alpine.js CDN for interactive demo state (Open/Close Edit Modal) -->
+  <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex items-center justify-center p-4">
+
+  <!-- CARD CONTAINER & MODAL STATE -->
+  <!-- Using Alpine.js (x-data) just to let you test clicking the Edit button in a browser preview -->
+  <div x-data="{ isEditOpen: false, name: 'Eleanor Vance', role: 'Matriarch / Grandmother', born: '1946', died: 'Living' }" class="w-full max-w-md mx-auto">
+    
+    <!-- PROFILE CARD -->
+    <div class="bg-white rounded-2xl shadow-sm border border-slate-100 p-5 transition-all duration-300 hover:shadow-md hover:border-slate-200">
+      <div class="flex flex-col sm:flex-row items-center sm:items-start gap-4">
+        
+        <!-- Avatar/Initials Circle -->
+        <div class="w-16 h-16 rounded-full bg-indigo-50 border border-indigo-100 flex items-center justify-center shrink-0 shadow-inner">
+          <span class="text-xl font-bold text-indigo-600 tracking-wider">EV</span>
+        </div>
+
+        <!-- Member Details -->
+        <div class="flex-1 text-center sm:text-left min-w-0">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+            <h3 x-text="name" class="text-lg font-semibold text-slate-900 truncate">Eleanor Vance</h3>
+            <!-- Relationship Badge -->
+            <span class="inline-block px-2.5 py-0.5 mx-auto sm:mx-0 text-xs font-medium bg-emerald-50 text-emerald-700 rounded-full border border-emerald-100 shrink-0" x-text="role">
+              Grandmother
+            </span>
+          </div>
+          
+          <!-- Lifespan Dates -->
+          <p class="text-sm text-slate-500 mt-1">
+            <span class="font-medium text-slate-700" x-text="born">1946</span> — <span class="text-slate-400 font-normal" x-text="died">Living</span>
+          </p>
+
+          <!-- Quick Relationship Stats / Links (Optional Metadata) -->
+          <div class="mt-3 flex items-center justify-center sm:justify-start gap-3 text-xs text-slate-400">
+            <span><strong>2</strong> Spouses</span>
+            <span class="w-1 h-1 rounded-full bg-slate-200"></span>
+            <span><strong>4</strong> Children</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Separator Line -->
+      <div class="my-4 border-t border-slate-100"></div>
+
+      <!-- Action Buttons (Responsive Grid) -->
+      <div class="grid grid-cols-2 gap-2">
+        <!-- Edit Button -->
+        <button 
+          @click="isEditOpen = true"
+          class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-slate-700 bg-slate-50 hover:bg-indigo-50 hover:text-indigo-600 rounded-xl transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-indigo-500/20"
+        >
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487zm0 0L19.5 7.125"></path></svg>
+          Edit
+        </button>
+
+        <!-- View Tree/Focus Button -->
+        <button class="flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors duration-200 shadow-sm shadow-indigo-100 focus:outline-none focus:ring-2 focus:ring-indigo-500/20">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 18L9 11.25l4.306 4.307a11.95 11.95 0 015.814-5.519l2.74-1.22m0 0l-5.94-2.281m5.94 2.28l-2.28 5.941"></path></svg>
+          View Branch
+        </button>
+      </div>
+    </div>
+
+    <!-- MODERN SLIDE-UP EDIT DRAWER / MODAL -->
+    <!-- Accessible overlay that stays hidden until 'Edit' is tapped -->
+    <div 
+      x-show="isEditOpen" 
+      x-transition:enter="transition ease-out duration-300"
+      x-transition:enter-start="opacity-0"
+      x-transition:enter-end="opacity-100"
+      x-transition:leave="transition ease-in duration-200"
+      x-transition:leave-start="opacity-100"
+      x-transition:leave-end="opacity-0"
+      class="fixed inset-0 z-50 bg-slate-900/40 backdrop-blur-sm flex items-end sm:items-center justify-center p-0 sm:p-4"
+      style="display: none;"
+    >
+      <!-- Modal Box -->
+      <div 
+        @click.away="isEditOpen = false"
+        x-transition:enter="transition ease-out duration-300 transform"
+        x-transition:enter-start="translate-y-full sm:translate-y-4 sm:scale-95"
+        x-transition:enter-end="translate-y-0 sm:scale-100"
+        x-transition:leave="transition ease-in duration-200 transform"
+        x-transition:leave-start="translate-y-0 sm:scale-100"
+        x-transition:leave-end="translate-y-full sm:translate-y-4 sm:scale-95"
+        class="bg-white w-full sm:max-w-md rounded-t-2xl sm:rounded-2xl shadow-xl p-6 border border-slate-100 overflow-hidden max-h-[90vh] flex flex-col"
+      >
+        <!-- Header -->
+        <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+          <h4 class="text-base font-semibold text-slate-900">Edit Family Member</h4>
+          <button @click="isEditOpen = false" class="text-slate-400 hover:text-slate-600 p-1 rounded-lg hover:bg-slate-50">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path></svg>
+          </button>
+        </div>
+
+        <!-- Form Fields -->
+        <div class="space-y-4 py-4 overflow-y-auto flex-1 text-left">
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Full Name</label>
+            <input type="text" x-model="name" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors text-sm text-slate-900">
+          </div>
+          
+          <div>
+            <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Relationship / Title</label>
+            <input type="text" x-model="role" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors text-sm text-slate-900">
+          </div>
+
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Birth Year</label>
+              <input type="text" x-model="born" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors text-sm text-slate-900">
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1">Death Year</label>
+              <input type="text" x-model="died" class="w-full px-3 py-2 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-colors text-sm text-slate-900">
+            </div>
+          </div>
+        </div>
+
+        <!-- Form Footer Actions -->
+        <div class="pt-4 border-t border-slate-100 grid grid-cols-2 gap-2">
+          <button @click="isEditOpen = false" class="px-4 py-2.5 text-sm font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 rounded-xl transition-colors">
+            Cancel
+          </button>
+          <button @click="isEditOpen = false" class="px-4 py-2.5 text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 rounded-xl transition-colors shadow-sm shadow-indigo-100">
+            Save Changes
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>
